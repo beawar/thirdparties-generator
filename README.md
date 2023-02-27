@@ -2,6 +2,8 @@
 
 Generate a thirdparties file with all direct dependencies listed under the proper license.
 
+![Build](https://github.com/beawar/thirdparties-generator/actions/workflows/build-test.yml/badge.svg)
+
 ## Installation
 
 Install globally with npm
