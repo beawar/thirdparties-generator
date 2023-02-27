@@ -7,11 +7,11 @@ Generate a thirdparties file with all direct dependencies listed under the prope
 Install globally with npm
 
 ```bash
-  npm install -g thirdparties-generator
+npm install -g thirdparties-generator
 ```
 Or run directly with npx
 ```bash
-    npx thirdparties-generator
+npx thirdparties-generator
 ```
 ## Usage
 
@@ -23,17 +23,17 @@ Or run directly with npx
 
 Generate a file THIRDPARTIES in the current folder project
 ```bash
-    npx thirdparties-generator
+npx thirdparties-generator
 ```
 
 Generate a file THIRDPARTIES in the specified project folder
 ```bash
-    npx thirdparties-generator -p path/to/project
+npx thirdparties-generator -p path/to/project
 ```
 
 Generate a file with the given name in the specified project folder
 ```bash
-    npx thirdparties-generator -p path/to/project -o something
+npx thirdparties-generator -p path/to/project -o something
 ```
 ## License
 
