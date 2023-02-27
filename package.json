@@ -1,0 +1,33 @@
+{
+  "name": "thirdparties-generator",
+  "version": "0.0.0",
+  "description": "Thirdparties file generator for node projects",
+  "main": "index.js",
+  "bin": "index.js",
+  "scripts": {
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "run": "ts-node src/index.ts",
+    "prepack": "rm -r lib",
+    "build": "npm run prepack; tsc"
+  },
+  "keywords": [],
+  "author": "Beatrice Guerra <betrix.dev@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.2",
+    "@types/lodash": "^4.14.191",
+    "@types/node": "^18.14.2",
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "@typescript-eslint/parser": "^5.54.0",
+    "eslint": "^8.35.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "license-checker-rseidelsohn": "github:beawar/license-checker-rseidelsohn",
+    "lodash": "^4.17.21"
+  }
+}
