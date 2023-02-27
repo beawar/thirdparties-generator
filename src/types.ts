@@ -1,3 +1,10 @@
+import { Arguments } from 'yargs';
+
+export interface CliArguments extends Arguments {
+    projectDir: string;
+    outFile: string;
+}
+
 export type Package = {
     name: string;
     copyright: string;
