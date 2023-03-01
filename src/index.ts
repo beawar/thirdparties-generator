@@ -6,6 +6,7 @@ import { writeThirdPartiesFile } from './write';
 import { createMapOfLicenses } from './read';
 import { trimEnd } from 'lodash';
 import { Logger } from './log';
+import path from 'path';
 
 const args = yargs(hideBin(process.argv))
     .option({
@@ -29,11 +30,12 @@ const args = yargs(hideBin(process.argv))
 
 Logger.init({ debug: args.debug, verbose: args.verbose });
 Logger.log('Init licenseChecker');
+
 licenseChecker.init(
     {
         start: args.projectDir,
         direct: true,
-        customPath: './config/fields.json',
+        customPath: path.resolve(__dirname, '../config/fields.json'),
     },
     (error, packages) => {
         if (error) {
