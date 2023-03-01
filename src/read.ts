@@ -2,6 +2,7 @@ import { ModuleInfo, ModuleInfos } from 'license-checker-rseidelsohn';
 import keyBy from 'lodash/keyBy';
 import type { License, SPDXLicense, SPDXLicenseDetails, SPDXLicenses } from './types';
 import { LICENSES_URL } from './constants';
+import { LogDebug } from './log';
 
 function fetchData<T>(url: Parameters<typeof fetch>[0]): Promise<T> {
     return fetch(url).then((response) => response.json());
@@ -65,7 +66,9 @@ async function putPackageInLicenseMap(
 }
 
 export function createMapOfLicenses(packages: ModuleInfos): Promise<License[]> {
+    LogDebug.log('Creating map of packages');
     return fetchData<SPDXLicenses>(LICENSES_URL).then(async (licensesData) => {
+        LogDebug.log('Retrieving licenses information');
         const spdxLicenseMap = keyBy(licensesData.licenses, (license) => license.licenseId);
         const licenseMap: { [license: string]: License } = {};
         const packageList = Object.values(packages);
