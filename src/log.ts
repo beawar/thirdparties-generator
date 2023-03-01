@@ -1,14 +1,22 @@
-export const LogDebug = (() => {
+export const Logger = (() => {
     let _isDebug = false;
-    function init(isDebug: boolean) {
-        _isDebug = isDebug;
+    let _isVerbose = false;
+    function init(options = { debug: false, verbose: false }) {
+        _isDebug = options.debug;
+        _isVerbose = options.verbose;
     }
 
-    function log(...args: unknown[]) {
+    function debug(...args: unknown[]) {
         if (_isDebug) {
             console.debug(...args);
         }
     }
 
-    return { init, log };
+    function log(...args: unknown[]) {
+        if (_isVerbose || _isDebug) {
+            console.log(...args);
+        }
+    }
+
+    return { init, debug, log };
 })();
