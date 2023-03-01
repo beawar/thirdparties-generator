@@ -10,7 +10,8 @@
   "files": [
     "dist",
     "esm",
-    "src"
+    "src",
+    "config"
   ],
   "scripts": {
     "lint": "eslint",
@@ -18,11 +19,9 @@
     "type-check": "tsc --noEmit",
     "start": "ts-node src/index.ts",
     "clean": "rimraf dist esm",
-    "copy-files": "copyfiles config/* dist; copyfiles config/* esm",
     "build:cjs": "tsc --module commonjs --outDir dist",
     "build:esm": "tsc --target esnext --outDir esm",
     "build": "npm run build:esm && npm run build:cjs",
-    "postbuild": "npm run copy-files",
     "prebuild": "npm run clean",
     "prepack": "npm run build",
     "preversion": "npm run build",
@@ -42,7 +41,6 @@
     "@types/yargs": "^17.0.22",
     "@typescript-eslint/eslint-plugin": "^5.54.0",
     "@typescript-eslint/parser": "^5.54.0",
-    "copyfiles": "^2.4.1",
     "eslint": "^8.35.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-prettier": "^4.2.1",
