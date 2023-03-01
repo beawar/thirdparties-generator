@@ -4,7 +4,9 @@
   "description": "Thirdparties file generator for node projects",
   "main": "dist/index.js",
   "module": "esm/index.js",
-  "bin": "esm/index.js",
+  "bin": {
+    "thirdparties-generator": "esm/index.js"
+  },
   "files": [
     "dist",
     "esm",
@@ -15,7 +17,7 @@
     "lint:fix": "eslint --fix",
     "type-check": "tsc --noEmit",
     "start": "ts-node src/index.ts",
-    "clean": "rimraf lib",
+    "clean": "rimraf dist esm",
     "copy-files": "copyfiles config/* dist; copyfiles config/* esm",
     "build:cjs": "tsc --module commonjs --outDir dist",
     "build:esm": "tsc --target esnext --outDir esm",
