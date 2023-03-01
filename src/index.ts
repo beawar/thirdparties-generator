@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import licenseChecker, { ModuleInfos } from 'license-checker-rseidelsohn';
+import licenseChecker from 'license-checker-rseidelsohn';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { writeThirdPartiesFile } from './write';
