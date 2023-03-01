@@ -5,7 +5,7 @@ import { hideBin } from 'yargs/helpers';
 import { writeThirdPartiesFile } from './write';
 import { createMapOfLicenses } from './read';
 import { trimEnd } from 'lodash';
-import { LogDebug } from './log';
+import { Logger } from './log';
 
 const args = yargs(hideBin(process.argv))
     .option({
@@ -20,12 +20,15 @@ const args = yargs(hideBin(process.argv))
         outFile: { alias: 'o', type: 'string', default: 'THIRDPARTIES', description: 'Name of the file generated' },
     })
     .option({
-        debug: { type: 'boolean', default: false, description: 'Print debug logs' },
+        debug: { type: 'boolean', default: false, description: 'Debug mode, print debug logs' },
+    })
+    .option({
+        verbose: { type: 'boolean', default: false, description: 'Verbose mode, print logs' },
     })
     .parseSync();
 
-LogDebug.init(args.debug);
-LogDebug.log('Init licenseChecker');
+Logger.init({ debug: args.debug, verbose: args.verbose });
+Logger.log('Init licenseChecker');
 licenseChecker.init(
     {
         start: args.projectDir,
@@ -37,13 +40,14 @@ licenseChecker.init(
             console.error(error);
             process.exit(1);
         } else {
-            LogDebug.log('Start processing packages');
+            Logger.log('Start processing packages');
             createMapOfLicenses(packages)
                 .then((licenseList) => {
-                    LogDebug.log('Writing out data');
+                    Logger.log('Writing out data');
+                    Logger.debug('Found', licenseList.length, 'different licenses');
                     const fullPathOutFile = `${trimEnd(args.projectDir, '/')}/${args.outFile}`;
                     writeThirdPartiesFile(licenseList, fullPathOutFile);
-                    LogDebug.log('Output file generated successfully');
+                    Logger.log('Output file generated successfully');
                     process.exit(0);
                 })
                 .catch((error) => {

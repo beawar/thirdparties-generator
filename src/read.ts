@@ -2,9 +2,10 @@ import { ModuleInfo, ModuleInfos } from 'license-checker-rseidelsohn';
 import keyBy from 'lodash/keyBy';
 import type { License, SPDXLicense, SPDXLicenseDetails, SPDXLicenses } from './types';
 import { LICENSES_URL } from './constants';
-import { LogDebug } from './log';
+import { Logger } from './log';
 
 function fetchData<T>(url: Parameters<typeof fetch>[0]): Promise<T> {
+    Logger.debug('fetch', url);
     return fetch(url).then((response) => response.json());
 }
 
@@ -37,6 +38,7 @@ async function putPackageInLicenseMap(
     spdxLicenseMap: Record<string, SPDXLicense>,
 ) {
     if (!licenseMap[license]) {
+        Logger.debug('Processing license', license, 'for', packageObject.name);
         if (spdxLicenseMap[license]) {
             const licenseDetails = await getLicenseDetails(spdxLicenseMap[license]);
             licenseMap[license] = {
@@ -66,15 +68,17 @@ async function putPackageInLicenseMap(
 }
 
 export function createMapOfLicenses(packages: ModuleInfos): Promise<License[]> {
-    LogDebug.log('Creating map of packages');
+    Logger.log('Creating map of packages');
     return fetchData<SPDXLicenses>(LICENSES_URL).then(async (licensesData) => {
-        LogDebug.log('Retrieving licenses information');
+        Logger.log('Retrieving licenses information');
         const spdxLicenseMap = keyBy(licensesData.licenses, (license) => license.licenseId);
         const licenseMap: { [license: string]: License } = {};
         const packageList = Object.values(packages);
+        Logger.debug('Number of packages to process', packageList.length);
         for (let i = 0; i < packageList.length; i += 1) {
             const packageObject = packageList[i];
             const licenses = packageObject.licenses;
+            Logger.debug('Processing', packageObject.name);
             if (licenses) {
                 if (Array.isArray(licenses)) {
                     for (const license of licenses) {
