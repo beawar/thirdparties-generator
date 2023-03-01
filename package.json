@@ -4,7 +4,7 @@
   "description": "Thirdparties file generator for node projects",
   "main": "dist/index.js",
   "module": "esm/index.js",
-  "bin": "dist/index.js",
+  "bin": "esm/index.js",
   "files": [
     "dist",
     "esm",
