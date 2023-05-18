@@ -52,7 +52,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "license-checker-rseidelsohn": "^4.2.1",
+    "license-checker-rseidelsohn": "^4.2.5",
     "lodash": "^4.17.21",
     "yargs": "^17.7.1"
   },

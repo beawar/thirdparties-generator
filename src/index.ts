@@ -34,7 +34,8 @@ Logger.log('Init licenseChecker');
 licenseChecker.init(
     {
         start: args.projectDir,
-        direct: true,
+        // FIXME: remove cast
+        direct: 0 as unknown as boolean,
         customPath: path.resolve(__dirname, '../config/fields.json'),
     },
     (error, packages) => {
