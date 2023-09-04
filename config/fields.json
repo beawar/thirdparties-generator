@@ -1,5 +1,14 @@
 {
-  "name": "",
+  "copyright": "",
+  "description": false,
+  "email": false,
+  "licenseFile": false,
+  "licenseModified": false,
   "licenses": "",
-  "copyright": ""
+  "licenseText": false,
+  "name": "",
+  "publisher": false,
+  "repository": false,
+  "url": false,
+  "version": false
 }
