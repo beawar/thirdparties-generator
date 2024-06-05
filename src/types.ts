@@ -1,4 +1,4 @@
-import { Arguments } from 'yargs';
+import type { Arguments } from 'yargs';
 
 export interface CliArguments extends Arguments {
     projectDir: string;

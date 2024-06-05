@@ -2,11 +2,10 @@
 import licenseChecker from 'license-checker-rseidelsohn';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import { writeThirdPartiesFile } from './write';
-import { createMapOfLicenses } from './read';
-import { trimEnd } from 'lodash';
-import { Logger } from './log';
-import path from 'path';
+import { writeThirdPartiesFile } from './write.js';
+import { createMapOfLicenses } from './read.js';
+import { Logger } from './log.js';
+import url from 'url';
 
 const args = yargs(hideBin(process.argv))
     .option({
@@ -34,9 +33,8 @@ Logger.log('Init licenseChecker');
 licenseChecker.init(
     {
         start: args.projectDir,
-        // FIXME: remove cast
-        direct: 0 as unknown as boolean,
-        customPath: path.resolve(__dirname, '../config/fields.json'),
+        direct: 0,
+        customPath: url.fileURLToPath(new URL('../config/fields.json', import.meta.url)),
     },
     (error, packages) => {
         if (error) {
@@ -48,7 +46,7 @@ licenseChecker.init(
                 .then((licenseList) => {
                     Logger.log('Writing out data');
                     Logger.debug('Found', licenseList.length, 'different licenses');
-                    const fullPathOutFile = `${trimEnd(args.projectDir, '/')}/${args.outFile}`;
+                    const fullPathOutFile = `${args.projectDir}/${args.outFile}`.replaceAll('//', '/');
                     writeThirdPartiesFile(licenseList, fullPathOutFile);
                     Logger.log('Output file generated successfully');
                     process.exit(0);

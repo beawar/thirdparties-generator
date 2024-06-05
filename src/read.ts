@@ -1,15 +1,15 @@
-import { ModuleInfo, ModuleInfos } from 'license-checker-rseidelsohn';
-import keyBy from 'lodash/keyBy';
-import type { License, SPDXLicense, SPDXLicenseDetails, SPDXLicenses } from './types';
-import { LICENSES_URL } from './constants';
-import { Logger } from './log';
+import type { ModuleInfo, ModuleInfos } from 'license-checker-rseidelsohn';
+import type { License, SPDXLicense, SPDXLicenseDetails, SPDXLicenses } from './types.js';
+import { LICENSES_URL } from './constants.js';
+import { Logger } from './log.js';
 
-function fetchData<T>(url: Parameters<typeof fetch>[0]): Promise<T> {
+async function fetchData<T>(url: Parameters<typeof fetch>[0]): Promise<T> {
     Logger.debug('fetch', url);
-    return fetch(url).then((response) => response.json());
+    const response = await fetch(url);
+    return response.json() as Promise<T>;
 }
 
-function getLicenseDetails(license: SPDXLicense): Promise<SPDXLicenseDetails> {
+async function getLicenseDetails(license: SPDXLicense): Promise<SPDXLicenseDetails> {
     const baseLicense: SPDXLicenseDetails = {
         licenseId: license.licenseId,
         name: '',
@@ -25,10 +25,12 @@ function getLicenseDetails(license: SPDXLicense): Promise<SPDXLicenseDetails> {
     if (!license.detailsUrl) {
         return Promise.resolve(baseLicense);
     }
-    return fetchData<SPDXLicenseDetails>(license.detailsUrl).catch((error) => {
+    try {
+        return await fetchData<SPDXLicenseDetails>(license.detailsUrl);
+    } catch (error) {
         console.error('Unable to fetch details for ', license.licenseId, license.detailsUrl, error);
         return baseLicense;
-    });
+    }
 }
 
 async function putPackageInLicenseMap(
@@ -39,8 +41,9 @@ async function putPackageInLicenseMap(
 ) {
     if (!licenseMap[license]) {
         Logger.debug('Processing license', license, 'for', packageObject.name);
-        if (spdxLicenseMap[license]) {
-            const licenseDetails = await getLicenseDetails(spdxLicenseMap[license]);
+        const spdxLicence = spdxLicenseMap[license];
+        if (spdxLicence) {
+            const licenseDetails = await getLicenseDetails(spdxLicence);
             licenseMap[license] = {
                 id: licenseDetails.licenseId,
                 name: licenseDetails.name,
@@ -57,7 +60,7 @@ async function putPackageInLicenseMap(
         }
     }
     if (packageObject.name) {
-        licenseMap[license].packages.push({
+        licenseMap[license]?.packages.push({
             name: packageObject.name,
             copyright: packageObject.copyright || '',
         });
@@ -67,28 +70,29 @@ async function putPackageInLicenseMap(
     }
 }
 
-export function createMapOfLicenses(packages: ModuleInfos): Promise<License[]> {
+export async function createMapOfLicenses(packages: ModuleInfos): Promise<License[]> {
     Logger.log('Creating map of packages');
-    return fetchData<SPDXLicenses>(LICENSES_URL).then(async (licensesData) => {
-        Logger.log('Retrieving licenses information');
-        const spdxLicenseMap = keyBy(licensesData.licenses, (license) => license.licenseId);
-        const licenseMap: { [license: string]: License } = {};
-        const packageList = Object.values(packages);
-        Logger.debug('Number of packages to process', packageList.length);
-        for (let i = 0; i < packageList.length; i += 1) {
-            const packageObject = packageList[i];
-            const licenses = packageObject.licenses;
-            Logger.debug('Processing', packageObject.name);
-            if (licenses) {
-                if (Array.isArray(licenses)) {
-                    for (const license of licenses) {
-                        await putPackageInLicenseMap(licenseMap, packageObject, license, spdxLicenseMap);
-                    }
-                } else {
-                    await putPackageInLicenseMap(licenseMap, packageObject, licenses, spdxLicenseMap);
+    const licensesData = await fetchData<SPDXLicenses>(LICENSES_URL);
+    Logger.log('Retrieving licenses information');
+    const spdxLicenseMap = licensesData.licenses.reduce<{ [id: string]: SPDXLicense }>((accumulator, license) => {
+        accumulator[license.licenseId] = license;
+        return accumulator;
+    }, {});
+    const licenseMap: { [license: string]: License } = {};
+    const packageList = Object.values(packages);
+    Logger.debug('Number of packages to process', packageList.length);
+    for (const packageObject of packageList) {
+        const licenses = packageObject.licenses;
+        Logger.debug('Processing', packageObject.name);
+        if (licenses) {
+            if (Array.isArray(licenses)) {
+                for (const license of licenses) {
+                    await putPackageInLicenseMap(licenseMap, packageObject, license, spdxLicenseMap);
                 }
+            } else {
+                await putPackageInLicenseMap(licenseMap, packageObject, licenses, spdxLicenseMap);
             }
         }
-        return Object.values(licenseMap);
-    });
+    }
+    return Object.values(licenseMap);
 }

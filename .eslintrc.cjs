@@ -3,7 +3,7 @@ module.exports = {
     plugins: ['unused-imports'],
     extends: ['plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
     parserOptions: {
-        ecmaVersion: 2020,
+        ecmaVersion: 2022,
         sourceType: 'module',
     },
     env: {

@@ -1,6 +1,6 @@
 import fs from 'fs';
-import type { License } from './types';
-import { Logger } from './log';
+import type { License } from './types.js';
+import { Logger } from './log.js';
 
 function getOutputIntro(license: License): string {
     return `${license.name} (${license.id}) applies to:`;
