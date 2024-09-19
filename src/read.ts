@@ -60,7 +60,7 @@ async function putPackageInLicenseMap(
         }
     }
     if (packageObject.name) {
-        licenseMap[license]?.packages.push({
+        licenseMap[license].packages.push({
             name: packageObject.name,
             copyright: packageObject.copyright || '',
         });

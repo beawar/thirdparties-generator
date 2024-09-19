@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import licenseChecker from 'license-checker-rseidelsohn';
+import * as licenseChecker from 'license-checker-rseidelsohn';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { writeThirdPartiesFile } from './write.js';
@@ -36,7 +36,7 @@ licenseChecker.init(
         direct: 0,
         customPath: url.fileURLToPath(new URL('../config/fields.json', import.meta.url)),
     },
-    (error, packages) => {
+    (error: Error | undefined, packages) => {
         if (error) {
             console.error(error);
             process.exit(1);
@@ -51,7 +51,7 @@ licenseChecker.init(
                     Logger.log('Output file generated successfully');
                     process.exit(0);
                 })
-                .catch((error) => {
+                .catch((error: unknown) => {
                     console.error(error);
                     process.exit(1);
                 });
