@@ -46,21 +46,6 @@
                             "type": "fix",
                             "section": "Bug Fixes",
                             "hidden": false
-                        },
-                        {
-                            "type": "refactor",
-                            "section": "Other changes",
-                            "hidden": false
-                        },
-                        {
-                            "type": "perf",
-                            "section": "Other changes",
-                            "hidden": false
-                        },
-                        {
-                            "type": "build",
-                            "section": "Other changes",
-                            "hidden": false
                         }
                     ]
                 }
@@ -68,5 +53,6 @@
         ],
         "@semantic-release/npm",
         "@semantic-release/github"
-    ]
+    ],
+    "dryRun": true
 }
