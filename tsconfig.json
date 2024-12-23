@@ -11,6 +11,7 @@
         "strict": true,
         "noUncheckedIndexedAccess": true,
         "noImplicitOverride": true,
+        "noUncheckedSideEffectImports": true,
         "module": "NodeNext",
         "outDir": "dist",
         "sourceMap": true,
